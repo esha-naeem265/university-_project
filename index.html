@@ -1,0 +1,1998 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BBSul University - Course Management System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary: #1a4b8c;
+            --secondary: #b8860b;
+            --accent: #2e8b57;
+            --light: #f5f5f5;
+            --dark: #333;
+            --success: #28a745;
+            --warning: #ffc107;
+            --danger: #dc3545;
+            --info: #17a2b8;
+        }
+
+        body {
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
+                        url('https://images.unsplash.com/photo-1562774053-701939374585?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2064&q=80') no-repeat center center fixed;
+            background-size: cover;
+            color: var(--light);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header Styles */
+        header {
+            background: rgba(26, 75, 140, 0.95);
+            color: white;
+            padding: 15px 0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo-icon {
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: white;
+            border-radius: 8px;
+            padding: 8px;
+        }
+
+        .logo-icon svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .logo-text {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .logo-text h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--secondary);
+            line-height: 1;
+        }
+
+        .logo-text span {
+            font-size: 0.9rem;
+            color: var(--light);
+            font-weight: 400;
+            letter-spacing: 1px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 25px;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            padding: 8px 15px;
+            border-radius: 5px;
+        }
+
+        .nav-links a:hover, .nav-links a.active {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .auth-buttons {
+            display: flex;
+            gap: 15px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border-radius: 5px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: var(--secondary);
+            color: var(--dark);
+        }
+
+        .btn-primary:hover {
+            background: #d4af37;
+            transform: translateY(-2px);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: white;
+            border: 2px solid white;
+        }
+
+        .btn-outline:hover {
+            background: white;
+            color: var(--primary);
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 100px 0;
+            text-align: center;
+            color: white;
+        }
+
+        .hero-content {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(0, 0, 0, 0.6);
+            padding: 40px;
+            border-radius: 15px;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .hero h2 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            color: var(--secondary);
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .hero-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: white;
+            color: var(--dark);
+            width: 500px;
+            max-width: 90%;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            background: var(--primary);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            position: relative;
+        }
+
+        .modal-body {
+            padding: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        /* Dashboard Styles */
+        .dashboard {
+            display: none;
+            background: rgba(255, 255, 255, 0.95);
+            color: var(--dark);
+            border-radius: 15px;
+            margin: 30px 0;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .dashboard-header {
+            background: var(--primary);
+            color: white;
+            padding: 20px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .dashboard-title {
+            font-size: 1.8rem;
+            color: var(--secondary);
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: white;
+        }
+
+        .dashboard-content {
+            padding: 30px;
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            gap: 30px;
+        }
+
+        .sidebar {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+        }
+
+        .sidebar-menu li {
+            margin-bottom: 10px;
+        }
+
+        .sidebar-menu a {
+            display: block;
+            padding: 12px 15px;
+            color: var(--dark);
+            text-decoration: none;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar-menu a:hover, .sidebar-menu a.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        .main-content {
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, var(--primary), #2a5da6);
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .stat-card h4 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .data-table th, .data-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+
+        .data-table th {
+            background: #f8f9fa;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .data-table tr:hover {
+            background: #f8f9fa;
+        }
+
+        .action-btn {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            margin-right: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .edit-btn {
+            background: var(--warning);
+            color: white;
+        }
+
+        .edit-btn:hover {
+            background: #e0a800;
+        }
+
+        .delete-btn {
+            background: var(--danger);
+            color: white;
+        }
+
+        .delete-btn:hover {
+            background: #c82333;
+        }
+
+        .view-btn {
+            background: var(--info);
+            color: white;
+        }
+
+        .view-btn:hover {
+            background: #138496;
+        }
+
+        .mark-btn {
+            background: var(--accent);
+            color: white;
+        }
+
+        .mark-btn:hover {
+            background: #218838;
+        }
+
+        /* Attendance Styles */
+        .attendance-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        .attendance-table th, .attendance-table td {
+            padding: 10px;
+            text-align: center;
+            border: 1px solid #ddd;
+        }
+
+        .attendance-table th {
+            background: var(--primary);
+            color: white;
+        }
+
+        .present {
+            background: #d4edda;
+            color: var(--success);
+        }
+
+        .absent {
+            background: #f8d7da;
+            color: var(--danger);
+        }
+
+        /* Features Section */
+        .features {
+            padding: 80px 0;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .section-title h2 {
+            font-size: 2.5rem;
+            color: var(--secondary);
+            margin-bottom: 15px;
+        }
+
+        .section-title p {
+            font-size: 1.1rem;
+            color: var(--light);
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            text-align: center;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            color: var(--secondary);
+            margin-bottom: 20px;
+        }
+
+        .feature-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: var(--light);
+        }
+
+        .feature-card p {
+            color: #ddd;
+            line-height: 1.6;
+        }
+
+        /* Footer */
+        footer {
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 60px 0 30px;
+            margin-top: 80px;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-column h3 {
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            color: var(--secondary);
+        }
+
+        .footer-column ul {
+            list-style: none;
+        }
+
+        .footer-column ul li {
+            margin-bottom: 10px;
+        }
+
+        .footer-column ul li a {
+            color: #ccc;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .footer-column ul li a:hover {
+            color: white;
+            padding-left: 5px;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid #444;
+            color: #aaa;
+            font-size: 0.9rem;
+        }
+
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 25px;
+            background: var(--success);
+            color: white;
+            border-radius: 5px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            z-index: 1001;
+            display: none;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .nav-links {
+                display: none;
+            }
+
+            .hero h2 {
+                font-size: 2.5rem;
+            }
+
+            .dashboard-content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero h2 {
+                font-size: 2rem;
+            }
+
+            .hero-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            
+            .logo {
+                gap: 10px;
+            }
+            
+            .logo-text h1 {
+                font-size: 1.5rem;
+            }
+            
+            .logo-text span {
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <div class="logo-icon">
+                        <svg width="39" height="39" viewBox="0 0 39 39" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M16.3759 22.0713L12.9043 18.1658C12.6291 17.8562 12.1551 17.8283 11.8455 18.1035C11.5359 18.3787 11.508 18.8527 11.7832 19.1623L15.7832 23.6623C16.0699 23.9849 16.569 23.9995 16.8741 23.6944L27.3741 13.1944C27.667 12.9015 27.667 12.4266 27.3741 12.1337C27.0812 11.8408 26.6063 11.8408 26.3134 12.1337L16.3759 22.0713Z" fill="#036AC4"/>
+                        </svg>
+                    </div>
+                    <div class="logo-text">
+                        <h1>BBSul</h1>
+                        <span>UNIVERSITY LAND HAMMER</span>
+                    </div>
+                </div>
+                <div class="nav-links">
+                    <a href="#" class="active">Home</a>
+                    <a href="#">Departments</a>
+                    <a href="#">Courses</a>
+                    <a href="#">Faculty</a>
+                    <a href="#">Contact</a>
+                </div>
+                <div class="auth-buttons">
+                    <button class="btn btn-outline" id="loginBtn">Login</button>
+                    <button class="btn btn-primary" id="registerBtn">Register</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h2>Welcome to BBSul University</h2>
+                <p>Manage your academic journey with our comprehensive course management system. Access courses, track attendance, and connect with faculty and peers.</p>
+                <div class="hero-buttons">
+                    <button class="btn btn-primary" id="demoLogin">Try Demo</button>
+                    <button class="btn btn-outline">Learn More</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Login Modal -->
+    <div class="modal" id="loginModal">
+        <div class="modal-content">
+            <button class="close-modal" id="closeModal">&times;</button>
+            <div class="modal-header">
+                <h2>Login to BBSul University</h2>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="userType">Login As</label>
+                    <select id="userType">
+                        <option value="student">Student</option>
+                        <option value="faculty">Faculty</option>
+                        <option value="admin">Administrator</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" placeholder="Enter your username">
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" placeholder="Enter your password">
+                </div>
+                <button class="btn btn-primary" style="width: 100%;" id="submitLogin">Login</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add User Modal -->
+    <div class="modal" id="addUserModal">
+        <div class="modal-content">
+            <button class="close-modal" id="closeAddUserModal">&times;</button>
+            <div class="modal-header">
+                <h2 id="addUserModalTitle">Add New User</h2>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="userRole">User Type</label>
+                    <select id="userRole">
+                        <option value="student">Student</option>
+                        <option value="faculty">Faculty</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="newUserName">Full Name</label>
+                    <input type="text" id="newUserName" placeholder="Enter full name">
+                </div>
+                <div class="form-group">
+                    <label for="newUserEmail">Email</label>
+                    <input type="email" id="newUserEmail" placeholder="Enter email address">
+                </div>
+                <div class="form-group">
+                    <label for="newUserDepartment">Department</label>
+                    <select id="newUserDepartment">
+                        <option value="Computer Science">Computer Science</option>
+                        <option value="Engineering">Engineering</option>
+                        <option value="Business">Business</option>
+                        <option value="Arts & Sciences">Arts & Sciences</option>
+                    </select>
+                </div>
+                <div class="form-group" id="studentYearGroup">
+                    <label for="newUserYear">Year</label>
+                    <select id="newUserYear">
+                        <option value="1st">1st Year</option>
+                        <option value="2nd">2nd Year</option>
+                        <option value="3rd">3rd Year</option>
+                        <option value="4th">4th Year</option>
+                    </select>
+                </div>
+                <button class="btn btn-primary" style="width: 100%;" id="submitAddUser">Add User</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Course Modal -->
+    <div class="modal" id="addCourseModal">
+        <div class="modal-content">
+            <button class="close-modal" id="closeAddCourseModal">&times;</button>
+            <div class="modal-header">
+                <h2>Add New Course</h2>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="courseCode">Course Code</label>
+                    <input type="text" id="courseCode" placeholder="e.g., CS101">
+                </div>
+                <div class="form-group">
+                    <label for="courseName">Course Name</label>
+                    <input type="text" id="courseName" placeholder="Enter course name">
+                </div>
+                <div class="form-group">
+                    <label for="courseDepartment">Department</label>
+                    <select id="courseDepartment">
+                        <option value="Computer Science">Computer Science</option>
+                        <option value="Engineering">Engineering</option>
+                        <option value="Business">Business</option>
+                        <option value="Arts & Sciences">Arts & Sciences</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="courseFaculty">Faculty</label>
+                    <select id="courseFaculty">
+                        <!-- Will be populated dynamically -->
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="courseSchedule">Schedule</label>
+                    <input type="text" id="courseSchedule" placeholder="e.g., Mon, Wed 10:00 AM">
+                </div>
+                <button class="btn btn-primary" style="width: 100%;" id="submitAddCourse">Add Course</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast"></div>
+
+    <!-- Dashboard -->
+    <div class="container">
+        <div class="dashboard" id="dashboard">
+            <!-- Dashboard content will be loaded here by JavaScript -->
+        </div>
+    </div>
+
+    <!-- Features Section -->
+    <section class="features">
+        <div class="container">
+            <div class="section-title">
+                <h2>System Features</h2>
+                <p>Our platform offers comprehensive tools for students, faculty, and administrators</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-user-graduate"></i>
+                    </div>
+                    <h3>Student Portal</h3>
+                    <p>Access courses, view schedules, check grades, and track attendance through an intuitive student dashboard.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-chalkboard-teacher"></i>
+                    </div>
+                    <h3>Faculty Dashboard</h3>
+                    <p>Manage courses, mark attendance, update grades, and communicate with students efficiently.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-user-shield"></i>
+                    </div>
+                    <h3>Admin Control</h3>
+                    <p>Full administrative control over users, courses, departments, and system configuration.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-clipboard-check"></i>
+                    </div>
+                    <h3>Attendance Tracking</h3>
+                    <p>Automated attendance system with real-time tracking and reporting for all courses.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-book"></i>
+                    </div>
+                    <h3>Course Management</h3>
+                    <p>Create, edit, and manage courses with detailed information, schedules, and resources.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-chart-bar"></i>
+                    </div>
+                    <h3>Analytics & Reports</h3>
+                    <p>Generate detailed reports on student performance, attendance, and institutional metrics.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>BBSul University</h3>
+                    <p>Premier institution for higher education with state-of-the-art facilities and experienced faculty.</p>
+                </div>
+                <div class="footer-column">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="#">Home</a></li>
+                        <li><a href="#">Academic Calendar</a></li>
+                        <li><a href="#">Course Catalog</a></li>
+                        <li><a href="#">Faculty Directory</a></li>
+                        <li><a href="#">Student Resources</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Departments</h3>
+                    <ul>
+                        <li><a href="#">Computer Science & IT</a></li>
+                        <li><a href="#">Engineering</a></li>
+                        <li><a href="#">Business Administration</a></li>
+                        <li><a href="#">Arts & Sciences</a></li>
+                        <li><a href="#">Health Sciences</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Contact Us</h3>
+                    <ul>
+                        <li><i class="fas fa-map-marker-alt"></i> University Avenue, BBSul Campus</li>
+                        <li><i class="fas fa-phone"></i> +1 (555) 123-4567</li>
+                        <li><i class="fas fa-envelope"></i> info@bbsul.edu</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2023 BBSul University. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Application State
+        const state = {
+            currentUser: null,
+            currentRole: null,
+            students: [
+                { id: 1, name: "John Smith", email: "john.smith@bbsul.edu", department: "Computer Science", year: "3rd" },
+                { id: 2, name: "Emma Johnson", email: "emma.johnson@bbsul.edu", department: "Engineering", year: "2nd" },
+                { id: 3, name: "Michael Brown", email: "michael.brown@bbsul.edu", department: "Business", year: "4th" },
+                { id: 4, name: "Sarah Davis", email: "sarah.davis@bbsul.edu", department: "Computer Science", year: "1st" }
+            ],
+            faculty: [
+                { id: 1, name: "Dr. Robert Wilson", email: "r.wilson@bbsul.edu", department: "Computer Science" },
+                { id: 2, name: "Dr. Lisa Anderson", email: "l.anderson@bbsul.edu", department: "Engineering" },
+                { id: 3, name: "Dr. James Miller", email: "j.miller@bbsul.edu", department: "Business" }
+            ],
+            courses: [
+                { id: 1, code: "CS101", name: "Introduction to Programming", department: "Computer Science", faculty: "Dr. Robert Wilson", schedule: "Mon, Wed 10:00 AM", students: 45 },
+                { id: 2, code: "CS301", name: "Data Structures", department: "Computer Science", faculty: "Dr. Robert Wilson", schedule: "Tue, Thu 2:00 PM", students: 38 },
+                { id: 3, code: "ENG201", name: "Thermodynamics", department: "Engineering", faculty: "Dr. Lisa Anderson", schedule: "Mon, Wed, Fri 11:00 AM", students: 32 },
+                { id: 4, code: "BUS101", name: "Principles of Management", department: "Business", faculty: "Dr. James Miller", schedule: "Tue, Thu 9:00 AM", students: 55 }
+            ],
+            attendance: {},
+            nextStudentId: 5,
+            nextFacultyId: 4,
+            nextCourseId: 5
+        };
+
+        // DOM Elements
+        const loginBtn = document.getElementById('loginBtn');
+        const registerBtn = document.getElementById('registerBtn');
+        const demoLogin = document.getElementById('demoLogin');
+        const loginModal = document.getElementById('loginModal');
+        const closeModal = document.getElementById('closeModal');
+        const submitLogin = document.getElementById('submitLogin');
+        const dashboard = document.getElementById('dashboard');
+        const userType = document.getElementById('userType');
+        const addUserModal = document.getElementById('addUserModal');
+        const closeAddUserModal = document.getElementById('closeAddUserModal');
+        const submitAddUser = document.getElementById('submitAddUser');
+        const userRole = document.getElementById('userRole');
+        const studentYearGroup = document.getElementById('studentYearGroup');
+        const addCourseModal = document.getElementById('addCourseModal');
+        const closeAddCourseModal = document.getElementById('closeAddCourseModal');
+        const submitAddCourse = document.getElementById('submitAddCourse');
+        const courseFaculty = document.getElementById('courseFaculty');
+        const toast = document.getElementById('toast');
+
+        // Initialize the application
+        function init() {
+            setupEventListeners();
+            initializeAttendanceData();
+        }
+
+        // Set up event listeners
+        function setupEventListeners() {
+            loginBtn.addEventListener('click', () => loginModal.style.display = 'flex');
+            registerBtn.addEventListener('click', () => loginModal.style.display = 'flex');
+            demoLogin.addEventListener('click', handleDemoLogin);
+            closeModal.addEventListener('click', () => loginModal.style.display = 'none');
+            submitLogin.addEventListener('click', handleLogin);
+            closeAddUserModal.addEventListener('click', () => addUserModal.style.display = 'none');
+            submitAddUser.addEventListener('click', handleAddUser);
+            userRole.addEventListener('change', handleUserRoleChange);
+            closeAddCourseModal.addEventListener('click', () => addCourseModal.style.display = 'none');
+            submitAddCourse.addEventListener('click', handleAddCourse);
+            
+            // Close modals when clicking outside
+            window.addEventListener('click', (e) => {
+                if (e.target === loginModal) loginModal.style.display = 'none';
+                if (e.target === addUserModal) addUserModal.style.display = 'none';
+                if (e.target === addCourseModal) addCourseModal.style.display = 'none';
+            });
+        }
+
+        // Initialize attendance data
+        function initializeAttendanceData() {
+            // Initialize attendance records for demo purposes
+            state.courses.forEach(course => {
+                if (!state.attendance[course.id]) {
+                    state.attendance[course.id] = {};
+                }
+                
+                state.students.forEach(student => {
+                    if (!state.attendance[course.id][student.id]) {
+                        // Randomly set attendance for demo
+                        state.attendance[course.id][student.id] = Math.random() > 0.2 ? 'present' : 'absent';
+                    }
+                });
+            });
+        }
+
+        // Handle demo login
+        function handleDemoLogin() {
+            userType.value = 'admin';
+            document.getElementById('username').value = 'admin';
+            document.getElementById('password').value = 'password';
+            handleLogin();
+        }
+
+        // Handle login
+        function handleLogin() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const role = userType.value;
+
+            if (username && password) {
+                state.currentUser = { username, role };
+                state.currentRole = role;
+                
+                loginModal.style.display = 'none';
+                document.getElementById('username').value = '';
+                document.getElementById('password').value = '';
+                
+                loadDashboard(role);
+                showToast('Login successful!', 'success');
+            } else {
+                showToast('Please enter both username and password', 'error');
+            }
+        }
+
+        // Handle user role change in add user form
+        function handleUserRoleChange() {
+            if (userRole.value === 'student') {
+                studentYearGroup.style.display = 'block';
+            } else {
+                studentYearGroup.style.display = 'none';
+            }
+        }
+
+        // Handle adding a new user
+        function handleAddUser() {
+            const name = document.getElementById('newUserName').value;
+            const email = document.getElementById('newUserEmail').value;
+            const department = document.getElementById('newUserDepartment').value;
+            const role = userRole.value;
+            
+            if (!name || !email) {
+                showToast('Please fill in all required fields', 'error');
+                return;
+            }
+            
+            if (role === 'student') {
+                const year = document.getElementById('newUserYear').value;
+                const newStudent = {
+                    id: state.nextStudentId++,
+                    name,
+                    email,
+                    department,
+                    year
+                };
+                state.students.push(newStudent);
+                showToast('Student added successfully!', 'success');
+            } else {
+                const newFaculty = {
+                    id: state.nextFacultyId++,
+                    name,
+                    email,
+                    department
+                };
+                state.faculty.push(newFaculty);
+                showToast('Faculty member added successfully!', 'success');
+            }
+            
+            addUserModal.style.display = 'none';
+            // Reset form
+            document.getElementById('newUserName').value = '';
+            document.getElementById('newUserEmail').value = '';
+            
+            // Reload the current tab to show the new user
+            if (state.currentRole === 'admin') {
+                loadAdminTab('users');
+            }
+        }
+
+        // Handle adding a new course
+        function handleAddCourse() {
+            const code = document.getElementById('courseCode').value;
+            const name = document.getElementById('courseName').value;
+            const department = document.getElementById('courseDepartment').value;
+            const faculty = document.getElementById('courseFaculty').value;
+            const schedule = document.getElementById('courseSchedule').value;
+            
+            if (!code || !name || !faculty || !schedule) {
+                showToast('Please fill in all required fields', 'error');
+                return;
+            }
+            
+            const newCourse = {
+                id: state.nextCourseId++,
+                code,
+                name,
+                department,
+                faculty,
+                schedule,
+                students: 0
+            };
+            
+            state.courses.push(newCourse);
+            showToast('Course added successfully!', 'success');
+            addCourseModal.style.display = 'none';
+            
+            // Reset form
+            document.getElementById('courseCode').value = '';
+            document.getElementById('courseName').value = '';
+            document.getElementById('courseSchedule').value = '';
+            
+            // Reload the current tab to show the new course
+            if (state.currentRole === 'admin') {
+                loadAdminTab('courses');
+            } else if (state.currentRole === 'faculty') {
+                loadFacultyTab('courses');
+            }
+        }
+
+        // Show toast notification
+        function showToast(message, type = 'success') {
+            toast.textContent = message;
+            toast.style.display = 'block';
+            toast.style.background = type === 'success' ? 'var(--success)' : 'var(--danger)';
+            
+            setTimeout(() => {
+                toast.style.display = 'none';
+            }, 3000);
+        }
+
+        // Load appropriate dashboard based on role
+        function loadDashboard(role) {
+            dashboard.style.display = 'block';
+            
+            switch(role) {
+                case 'student':
+                    loadStudentDashboard();
+                    break;
+                case 'faculty':
+                    loadFacultyDashboard();
+                    break;
+                case 'admin':
+                    loadAdminDashboard();
+                    break;
+            }
+            
+            // Scroll to dashboard
+            dashboard.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Load Student Dashboard
+        function loadStudentDashboard() {
+            dashboard.innerHTML = `
+                <div class="dashboard-header">
+                    <h2 class="dashboard-title">Student Dashboard</h2>
+                    <div class="user-info">
+                        <div class="user-avatar">S</div>
+                        <span>Student User</span>
+                    </div>
+                </div>
+                <div class="dashboard-content">
+                    <div class="sidebar">
+                        <ul class="sidebar-menu">
+                            <li><a href="#" class="active" data-tab="courses">My Courses</a></li>
+                            <li><a href="#" data-tab="attendance">Attendance</a></li>
+                            <li><a href="#" data-tab="grades">Grades</a></li>
+                            <li><a href="#" data-tab="profile">Profile</a></li>
+                            <li><a href="#" id="logoutBtn">Logout</a></li>
+                        </ul>
+                    </div>
+                    <div class="main-content">
+                        <div class="stats-grid">
+                            <div class="stat-card">
+                                <h4>${state.courses.length}</h4>
+                                <p>Enrolled Courses</p>
+                            </div>
+                            <div class="stat-card">
+                                <h4>88%</h4>
+                                <p>Overall Attendance</p>
+                            </div>
+                            <div class="stat-card">
+                                <h4>3.6</h4>
+                                <p>Current GPA</p>
+                            </div>
+                            <div class="stat-card">
+                                <h4>2</h4>
+                                <p>Pending Assignments</p>
+                            </div>
+                        </div>
+                        
+                        <div id="tab-content">
+                            <!-- Tab content will be loaded here -->
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            // Load initial tab
+            loadStudentTab('courses');
+            
+            // Add event listeners for sidebar menu
+            document.querySelectorAll('.sidebar-menu a').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    if (this.id === 'logoutBtn') {
+                        logout();
+                        return;
+                    }
+                    
+                    // Update active tab
+                    document.querySelectorAll('.sidebar-menu a').forEach(a => a.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    const tab = this.getAttribute('data-tab');
+                    loadStudentTab(tab);
+                });
+            });
+        }
+
+        // Load Faculty Dashboard
+        function loadFacultyDashboard() {
+            dashboard.innerHTML = `
+                <div class="dashboard-header">
+                    <h2 class="dashboard-title">Faculty Dashboard</h2>
+                    <div class="user-info">
+                        <div class="user-avatar">F</div>
+                        <span>Faculty User</span>
+                    </div>
+                </div>
+                <div class="dashboard-content">
+                    <div class="sidebar">
+                        <ul class="sidebar-menu">
+                            <li><a href="#" class="active" data-tab="courses">My Courses</a></li>
+                            <li><a href="#" data-tab="attendance">Mark Attendance</a></li>
+                            <li><a href="#" data-tab="students">Students</a></li>
+                            <li><a href="#" data-tab="profile">Profile</a></li>
+                            <li><a href="#" id="logoutBtn">Logout</a></li>
+                        </ul>
+                    </div>
+                    <div class="main-content">
+                        <div class="stats-grid">
+                            <div class="stat-card">
+                                <h4>${state.courses.filter(c => c.faculty === 'Dr. Robert Wilson').length}</h4>
+                                <p>My Courses</p>
+                            </div>
+                            <div class="stat-card">
+                                <h4>${state.students.length}</h4>
+                                <p>Total Students</p>
+                            </div>
+                            <div class="stat-card">
+                                <h4>92%</h4>
+                                <p>Avg. Attendance</p>
+                            </div>
+                            <div class="stat-card">
+                                <h4>8</h4>
+                                <p>Pending Tasks</p>
+                            </div>
+                        </div>
+                        
+                        <div id="tab-content">
+                            <!-- Tab content will be loaded here -->
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            // Load initial tab
+            loadFacultyTab('courses');
+            
+            // Add event listeners for sidebar menu
+            document.querySelectorAll('.sidebar-menu a').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    if (this.id === 'logoutBtn') {
+                        logout();
+                        return;
+                    }
+                    
+                    // Update active tab
+                    document.querySelectorAll('.sidebar-menu a').forEach(a => a.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    const tab = this.getAttribute('data-tab');
+                    loadFacultyTab(tab);
+                });
+            });
+        }
+
+        // Load Admin Dashboard
+        function loadAdminDashboard() {
+            dashboard.innerHTML = `
+                <div class="dashboard-header">
+                    <h2 class="dashboard-title">Administrator Dashboard</h2>
+                    <div class="user-info">
+                        <div class="user-avatar">A</div>
+                        <span>Admin User</span>
+                    </div>
+                </div>
+                <div class="dashboard-content">
+                    <div class="sidebar">
+                        <ul class="sidebar-menu">
+                            <li><a href="#" class="active" data-tab="overview">Overview</a></li>
+                            <li><a href="#" data-tab="users">Manage Users</a></li>
+                            <li><a href="#" data-tab="courses">Manage Courses</a></li>
+                            <li><a href="#" data-tab="departments">Departments</a></li>
+                            <li><a href="#" data-tab="reports">Reports</a></li>
+                            <li><a href="#" id="logoutBtn">Logout</a></li>
+                        </ul>
+                    </div>
+                    <div class="main-content">
+                        <div class="stats-grid">
+                            <div class="stat-card">
+                                <h4>${state.students.length}</h4>
+                                <p>Total Students</p>
+                            </div>
+                            <div class="stat-card">
+                                <h4>${state.faculty.length}</h4>
+                                <p>Faculty Members</p>
+                            </div>
+                            <div class="stat-card">
+                                <h4>${state.courses.length}</h4>
+                                <p>Active Courses</p>
+                            </div>
+                            <div class="stat-card">
+                                <h4>4</h4>
+                                <p>Departments</p>
+                            </div>
+                        </div>
+                        
+                        <div id="tab-content">
+                            <!-- Tab content will be loaded here -->
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            // Load initial tab
+            loadAdminTab('overview');
+            
+            // Add event listeners for sidebar menu
+            document.querySelectorAll('.sidebar-menu a').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    if (this.id === 'logoutBtn') {
+                        logout();
+                        return;
+                    }
+                    
+                    // Update active tab
+                    document.querySelectorAll('.sidebar-menu a').forEach(a => a.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    const tab = this.getAttribute('data-tab');
+                    loadAdminTab(tab);
+                });
+            });
+        }
+
+        // Load Student Tab Content
+        function loadStudentTab(tab) {
+            const tabContent = document.getElementById('tab-content');
+            
+            switch(tab) {
+                case 'courses':
+                    tabContent.innerHTML = `
+                        <h3>My Courses</h3>
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Course Code</th>
+                                    <th>Course Name</th>
+                                    <th>Instructor</th>
+                                    <th>Schedule</th>
+                                    <th>Attendance</th>
+                                    <th>Grade</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${state.courses.map(course => `
+                                    <tr>
+                                        <td>${course.code}</td>
+                                        <td>${course.name}</td>
+                                        <td>${course.faculty}</td>
+                                        <td>${course.schedule}</td>
+                                        <td>${Math.floor(Math.random() * 10) + 85}%</td>
+                                        <td>${getRandomGrade()}</td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    `;
+                    break;
+                case 'attendance':
+                    tabContent.innerHTML = `
+                        <h3>My Attendance</h3>
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Course</th>
+                                    <th>Date</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>CS101 - Introduction to Programming</td>
+                                    <td>2023-10-01</td>
+                                    <td><span style="color: var(--success);">Present</span></td>
+                                </tr>
+                                <tr>
+                                    <td>CS101 - Introduction to Programming</td>
+                                    <td>2023-10-03</td>
+                                    <td><span style="color: var(--success);">Present</span></td>
+                                </tr>
+                                <tr>
+                                    <td>CS101 - Introduction to Programming</td>
+                                    <td>2023-10-05</td>
+                                    <td><span style="color: var(--danger);">Absent</span></td>
+                                </tr>
+                                <tr>
+                                    <td>MTH201 - Calculus II</td>
+                                    <td>2023-10-02</td>
+                                    <td><span style="color: var(--success);">Present</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    `;
+                    break;
+                case 'grades':
+                    tabContent.innerHTML = `
+                        <h3>My Grades</h3>
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Course</th>
+                                    <th>Assignment</th>
+                                    <th>Score</th>
+                                    <th>Grade</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>CS101 - Introduction to Programming</td>
+                                    <td>Midterm Exam</td>
+                                    <td>85/100</td>
+                                    <td>B+</td>
+                                </tr>
+                                <tr>
+                                    <td>CS101 - Introduction to Programming</td>
+                                    <td>Programming Assignment 1</td>
+                                    <td>92/100</td>
+                                    <td>A-</td>
+                                </tr>
+                                <tr>
+                                    <td>MTH201 - Calculus II</td>
+                                    <td>Quiz 1</td>
+                                    <td>78/100</td>
+                                    <td>C+</td>
+                                </tr>
+                                <tr>
+                                    <td>PHY101 - General Physics</td>
+                                    <td>Lab Report 2</td>
+                                    <td>95/100</td>
+                                    <td>A</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    `;
+                    break;
+                case 'profile':
+                    tabContent.innerHTML = `
+                        <h3>My Profile</h3>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                            <div>
+                                <h4>Personal Information</h4>
+                                <p><strong>Name:</strong> John Smith</p>
+                                <p><strong>Student ID:</strong> S123456</p>
+                                <p><strong>Email:</strong> john.smith@bbsul.edu</p>
+                                <p><strong>Department:</strong> Computer Science</p>
+                                <p><strong>Year:</strong> 3rd Year</p>
+                            </div>
+                            <div>
+                                <h4>Academic Information</h4>
+                                <p><strong>GPA:</strong> 3.6</p>
+                                <p><strong>Total Credits:</strong> 90</p>
+                                <p><strong>Enrollment Status:</strong> Full-time</p>
+                                <p><strong>Advisor:</strong> Dr. Robert Wilson</p>
+                            </div>
+                        </div>
+                    `;
+                    break;
+            }
+        }
+
+        // Load Faculty Tab Content
+        function loadFacultyTab(tab) {
+            const tabContent = document.getElementById('tab-content');
+            
+            switch(tab) {
+                case 'courses':
+                    const facultyCourses = state.courses.filter(c => c.faculty === 'Dr. Robert Wilson');
+                    tabContent.innerHTML = `
+                        <h3>My Courses</h3>
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Course Code</th>
+                                    <th>Course Name</th>
+                                    <th>Schedule</th>
+                                    <th>Enrolled</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${facultyCourses.map(course => `
+                                    <tr>
+                                        <td>${course.code}</td>
+                                        <td>${course.name}</td>
+                                        <td>${course.schedule}</td>
+                                        <td>${course.students}</td>
+                                        <td>
+                                            <button class="action-btn view-btn" onclick="viewCourse(${course.id})">View</button>
+                                            <button class="action-btn edit-btn" onclick="editCourse(${course.id})">Edit</button>
+                                        </td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    `;
+                    break;
+                case 'attendance':
+                    tabContent.innerHTML = `
+                        <h3>Mark Attendance</h3>
+                        <div style="margin-bottom: 20px;">
+                            <label for="attendanceCourse">Select Course:</label>
+                            <select id="attendanceCourse" style="width: 300px; margin-left: 10px;">
+                                <option value="">-- Select Course --</option>
+                                ${state.courses.filter(c => c.faculty === 'Dr. Robert Wilson').map(course => `
+                                    <option value="${course.id}">${course.code} - ${course.name}</option>
+                                `).join('')}
+                            </select>
+                            <button class="btn btn-primary" style="margin-left: 10px;" onclick="loadAttendanceTable()">Load Students</button>
+                        </div>
+                        <div id="attendanceTableContainer">
+                            <p>Please select a course to mark attendance.</p>
+                        </div>
+                    `;
+                    break;
+                case 'students':
+                    tabContent.innerHTML = `
+                        <h3>My Students</h3>
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Student ID</th>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Course</th>
+                                    <th>Attendance</th>
+                                    <th>Grade</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${state.students.map((student, index) => `
+                                    <tr>
+                                        <td>S${100000 + student.id}</td>
+                                        <td>${student.name}</td>
+                                        <td>${student.email}</td>
+                                        <td>${state.courses[index % state.courses.length].code}</td>
+                                        <td>${Math.floor(Math.random() * 10) + 85}%</td>
+                                        <td>${getRandomGrade()}</td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    `;
+                    break;
+                case 'profile':
+                    tabContent.innerHTML = `
+                        <h3>Faculty Profile</h3>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                            <div>
+                                <h4>Personal Information</h4>
+                                <p><strong>Name:</strong> Dr. Robert Wilson</p>
+                                <p><strong>Faculty ID:</strong> F12345</p>
+                                <p><strong>Email:</strong> r.wilson@bbsul.edu</p>
+                                <p><strong>Department:</strong> Computer Science</p>
+                                <p><strong>Position:</strong> Associate Professor</p>
+                            </div>
+                            <div>
+                                <h4>Professional Information</h4>
+                                <p><strong>Office:</strong> CS Building, Room 205</p>
+                                <p><strong>Phone:</strong> (555) 123-4567</p>
+                                <p><strong>Office Hours:</strong> Mon, Wed 2:00-4:00 PM</p>
+                                <p><strong>Courses Teaching:</strong> ${state.courses.filter(c => c.faculty === 'Dr. Robert Wilson').length}</p>
+                                <p><strong>Total Students:</strong> ${state.students.length}</p>
+                            </div>
+                        </div>
+                    `;
+                    break;
+            }
+        }
+
+        // Load Admin Tab Content
+        function loadAdminTab(tab) {
+            const tabContent = document.getElementById('tab-content');
+            
+            switch(tab) {
+                case 'overview':
+                    tabContent.innerHTML = `
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                            <h3>System Overview</h3>
+                            <button class="btn btn-primary" onclick="generateReport()">Generate Report</button>
+                        </div>
+                        
+                        <h4>Recent Courses</h4>
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Course ID</th>
+                                    <th>Course Name</th>
+                                    <th>Department</th>
+                                    <th>Faculty</th>
+                                    <th>Enrolled</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${state.courses.map(course => `
+                                    <tr>
+                                        <td>${course.code}</td>
+                                        <td>${course.name}</td>
+                                        <td>${course.department}</td>
+                                        <td>${course.faculty}</td>
+                                        <td>${course.students}</td>
+                                        <td>
+                                            <button class="action-btn edit-btn" onclick="editCourse(${course.id})">Edit</button>
+                                            <button class="action-btn delete-btn" onclick="deleteCourse(${course.id})">Delete</button>
+                                        </td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    `;
+                    break;
+                case 'users':
+                    tabContent.innerHTML = `
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                            <h3>Manage Users</h3>
+                            <button class="btn btn-primary" onclick="openAddUserModal()">Add New User</button>
+                        </div>
+                        
+                        <h4>Students</h4>
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Student ID</th>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Department</th>
+                                    <th>Year</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${state.students.map(student => `
+                                    <tr>
+                                        <td>S${100000 + student.id}</td>
+                                        <td>${student.name}</td>
+                                        <td>${student.email}</td>
+                                        <td>${student.department}</td>
+                                        <td>${student.year}</td>
+                                        <td>
+                                            <button class="action-btn edit-btn" onclick="editUser(${student.id}, 'student')">Edit</button>
+                                            <button class="action-btn delete-btn" onclick="deleteUser(${student.id}, 'student')">Delete</button>
+                                        </td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                        
+                        <h4 style="margin-top: 30px;">Faculty</h4>
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Faculty ID</th>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Department</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${state.faculty.map(faculty => `
+                                    <tr>
+                                        <td>F${10000 + faculty.id}</td>
+                                        <td>${faculty.name}</td>
+                                        <td>${faculty.email}</td>
+                                        <td>${faculty.department}</td>
+                                        <td>
+                                            <button class="action-btn edit-btn" onclick="editUser(${faculty.id}, 'faculty')">Edit</button>
+                                            <button class="action-btn delete-btn" onclick="deleteUser(${faculty.id}, 'faculty')">Delete</button>
+                                        </td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    `;
+                    break;
+                case 'courses':
+                    tabContent.innerHTML = `
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                            <h3>Manage Courses</h3>
+                            <button class="btn btn-primary" onclick="openAddCourseModal()">Add New Course</button>
+                        </div>
+                        
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Course ID</th>
+                                    <th>Course Name</th>
+                                    <th>Department</th>
+                                    <th>Faculty</th>
+                                    <th>Schedule</th>
+                                    <th>Enrolled</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${state.courses.map(course => `
+                                    <tr>
+                                        <td>${course.code}</td>
+                                        <td>${course.name}</td>
+                                        <td>${course.department}</td>
+                                        <td>${course.faculty}</td>
+                                        <td>${course.schedule}</td>
+                                        <td>${course.students}</td>
+                                        <td>
+                                            <button class="action-btn edit-btn" onclick="editCourse(${course.id})">Edit</button>
+                                            <button class="action-btn delete-btn" onclick="deleteCourse(${course.id})">Delete</button>
+                                        </td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    `;
+                    break;
+                case 'departments':
+                    const departments = [...new Set(state.courses.map(c => c.department))];
+                    tabContent.innerHTML = `
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                            <h3>Departments</h3>
+                            <button class="btn btn-primary">Add New Department</button>
+                        </div>
+                        
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Department Name</th>
+                                    <th>Head of Department</th>
+                                    <th>Faculty Count</th>
+                                    <th>Student Count</th>
+                                    <th>Course Count</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${departments.map(dept => {
+                                    const deptFaculty = state.faculty.filter(f => f.department === dept);
+                                    const deptStudents = state.students.filter(s => s.department === dept);
+                                    const deptCourses = state.courses.filter(c => c.department === dept);
+                                    const headOfDept = deptFaculty.length > 0 ? deptFaculty[0].name : 'Not assigned';
+                                    
+                                    return `
+                                        <tr>
+                                            <td>${dept}</td>
+                                            <td>${headOfDept}</td>
+                                            <td>${deptFaculty.length}</td>
+                                            <td>${deptStudents.length}</td>
+                                            <td>${deptCourses.length}</td>
+                                            <td>
+                                                <button class="action-btn edit-btn">Edit</button>
+                                                <button class="action-btn delete-btn">Delete</button>
+                                            </td>
+                                        </tr>
+                                    `;
+                                }).join('')}
+                            </tbody>
+                        </table>
+                    `;
+                    break;
+                case 'reports':
+                    tabContent.innerHTML = `
+                        <h3>Reports & Analytics</h3>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-top: 20px;">
+                            <div>
+                                <h4>Generate Reports</h4>
+                                <div style="display: flex; flex-direction: column; gap: 15px;">
+                                    <button class="btn btn-primary" onclick="generateReport('enrollment')">Student Enrollment Report</button>
+                                    <button class="btn btn-primary" onclick="generateReport('faculty')">Faculty Workload Report</button>
+                                    <button class="btn btn-primary" onclick="generateReport('course')">Course Performance Report</button>
+                                    <button class="btn btn-primary" onclick="generateReport('attendance')">Attendance Summary Report</button>
+                                    <button class="btn btn-primary" onclick="generateReport('department')">Department Statistics</button>
+                                </div>
+                            </div>
+                            <div>
+                                <h4>Recent Reports</h4>
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Report Name</th>
+                                            <th>Generated On</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>Fall 2023 Enrollment Report</td>
+                                            <td>2023-09-15</td>
+                                            <td>
+                                                <button class="action-btn view-btn">View</button>
+                                                <button class="action-btn delete-btn">Delete</button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Faculty Workload Q3 2023</td>
+                                            <td>2023-08-30</td>
+                                            <td>
+                                                <button class="action-btn view-btn">View</button>
+                                                <button class="action-btn delete-btn">Delete</button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Spring 2023 Attendance Summary</td>
+                                            <td>2023-06-20</td>
+                                            <td>
+                                                <button class="action-btn view-btn">View</button>
+                                                <button class="action-btn delete-btn">Delete</button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    `;
+                    break;
+            }
+        }
+
+        // Global functions for button actions
+        window.openAddUserModal = function() {
+            addUserModal.style.display = 'flex';
+            document.getElementById('addUserModalTitle').textContent = 'Add New User';
+            // Reset form
+            document.getElementById('newUserName').value = '';
+            document.getElementById('newUserEmail').value = '';
+            userRole.value = 'student';
+            studentYearGroup.style.display = 'block';
+        };
+
+        window.openAddCourseModal = function() {
+            // Populate faculty dropdown
+            courseFaculty.innerHTML = state.faculty.map(f => 
+                `<option value="${f.name}">${f.name}</option>`
+            ).join('');
+            
+            addCourseModal.style.display = 'flex';
+        };
+
+        window.loadAttendanceTable = function() {
+            const courseId = document.getElementById('attendanceCourse').value;
+            if (!courseId) {
+                showToast('Please select a course first', 'error');
+                return;
+            }
+            
+            const container = document.getElementById('attendanceTableContainer');
+            const course = state.courses.find(c => c.id == courseId);
+            
+            container.innerHTML = `
+                <h4>Mark Attendance for ${course.code} - ${course.name}</h4>
+                <table class="attendance-table">
+                    <thead>
+                        <tr>
+                            <th>Student ID</th>
+                            <th>Student Name</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${state.students.map(student => {
+                            const status = state.attendance[courseId] && state.attendance[courseId][student.id] 
+                                ? state.attendance[courseId][student.id] 
+                                : 'unmarked';
+                                
+                            return `
+                                <tr>
+                                    <td>S${100000 + student.id}</td>
+                                    <td>${student.name}</td>
+                                    <td id="status-${courseId}-${student.id}" class="${status === 'present' ? 'present' : status === 'absent' ? 'absent' : ''}">
+                                        ${status === 'present' ? 'Present' : status === 'absent' ? 'Absent' : 'Not Marked'}
+                                    </td>
+                                    <td>
+                                        <button class="action-btn mark-btn" onclick="markAttendance(${courseId}, ${student.id}, 'present')">Present</button>
+                                        <button class="action-btn delete-btn" onclick="markAttendance(${courseId}, ${student.id}, 'absent')">Absent</button>
+                                    </td>
+                                </tr>
+                            `;
+                        }).join('')}
+                    </tbody>
+                </table>
+                <div style="margin-top: 20px;">
+                    <button class="btn btn-primary" onclick="saveAttendance(${courseId})">Save Attendance</button>
+                </div>
+            `;
+        };
+
+        window.markAttendance = function(courseId, studentId, status) {
+            if (!state.attendance[courseId]) {
+                state.attendance[courseId] = {};
+            }
+            state.attendance[courseId][studentId] = status;
+            
+            const statusCell = document.getElementById(`status-${courseId}-${studentId}`);
+            statusCell.textContent = status === 'present' ? 'Present' : 'Absent';
+            statusCell.className = status === 'present' ? 'present' : 'absent';
+            
+            showToast(`Attendance marked as ${status}`, 'success');
+        };
+
+        window.saveAttendance = function(courseId) {
+            showToast('Attendance saved successfully!', 'success');
+        };
+
+        window.editUser = function(id, type) {
+            showToast(`${type === 'student' ? 'Student' : 'Faculty'} edit functionality would open here`, 'info');
+        };
+
+        window.deleteUser = function(id, type) {
+            if (confirm(`Are you sure you want to delete this ${type}?`)) {
+                if (type === 'student') {
+                    state.students = state.students.filter(s => s.id !== id);
+                } else {
+                    state.faculty = state.faculty.filter(f => f.id !== id);
+                }
+                showToast(`${type === 'student' ? 'Student' : 'Faculty'} deleted successfully`, 'success');
+                loadAdminTab('users');
+            }
+        };
+
+        window.editCourse = function(id) {
+            showToast('Course edit functionality would open here', 'info');
+        };
+
+        window.deleteCourse = function(id) {
+            if (confirm('Are you sure you want to delete this course?')) {
+                state.courses = state.courses.filter(c => c.id !== id);
+                showToast('Course deleted successfully', 'success');
+                loadAdminTab('courses');
+            }
+        };
+
+        window.viewCourse = function(id) {
+            showToast('Course view functionality would open here', 'info');
+        };
+
+        window.generateReport = function(type = 'general') {
+            const reportTypes = {
+                'enrollment': 'Student Enrollment',
+                'faculty': 'Faculty Workload',
+                'course': 'Course Performance',
+                'attendance': 'Attendance Summary',
+                'department': 'Department Statistics',
+                'general': 'General System'
+            };
+            
+            showToast(`${reportTypes[type]} Report generated successfully!`, 'success');
+        };
+
+        // Helper functions
+        function getRandomGrade() {
+            const grades = ['A', 'A-', 'B+', 'B', 'B-', 'C+', 'C', 'C-', 'D', 'F'];
+            return grades[Math.floor(Math.random() * grades.length)];
+        }
+
+        function logout() {
+            state.currentUser = null;
+            state.currentRole = null;
+            dashboard.style.display = 'none';
+            showToast('You have been logged out successfully.', 'success');
+        }
+
+        // Initialize the application when the page loads
+        document.addEventListener('DOMContentLoaded', init);
+
+
+    </script>
+</body>
+</html>
